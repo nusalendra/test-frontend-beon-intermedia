@@ -28,9 +28,21 @@ const RumahEdit = () => {
 
         setAlamat(data.alamat);
         setStatusRumah(data.status_rumah);
-        setTanggalMulaiHuni(data.history_rumah[0].tanggal_mulai_huni);
-        setTanggalAkhirHuni(data.history_rumah[0]. tanggal_akhir_huni);
-        setPenghuniList(data.penghuni);
+
+        if (
+          data.history_rumah &&
+          data.history_rumah.length > 0 &&
+          data.penghuni &&
+          data.penghuni.length > 0
+        ) {
+          setTanggalMulaiHuni(data.history_rumah[0].tanggal_mulai_huni);
+          setTanggalAkhirHuni(data.history_rumah[0].tanggal_akhir_huni);
+        } else {
+          setTanggalMulaiHuni(null);
+          setTanggalAkhirHuni(null);
+        }
+
+        setPenghuniList(data.penghuni || []);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -66,11 +78,29 @@ const RumahEdit = () => {
     setPenghuniList(newPenghuniList);
   };
 
+  const handlePerubahanKepemilikan = async (event) => {
+    event.preventDefault();
+
+    try {
+      await axios.post(
+        `http://localhost:8000/api/rumah/${id}/perubahan-kepemilikan`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Ada kesalahan saat mengirim data:", error);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     let formData = new FormData();
-    
+
     formData.append("alamat", alamat || "");
     formData.append("status_rumah", statusRumah || "");
     if (statusRumah === "Dihuni") {
@@ -184,9 +214,42 @@ const RumahEdit = () => {
                 />
               </div>
             </div>
-            <label className="block text-sm font-semibold text-gray-900 mb-2">
-              Daftar Penghuni
-            </label>
+            <div className="flex items-center justify-between mb-4 bg-gray-100 p-4 rounded-lg shadow-sm">
+              <label className="text-lg font-semibold text-gray-800 flex items-center">
+                <svg
+                  className="w-5 h-5 text-blue-500 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3-9H7a1 1 0 100 2h6a1 1 0 100-2z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                Daftar Penghuni
+              </label>
+              <button
+                type="submit"
+                onClick={handlePerubahanKepemilikan}
+                className="flex items-center gap-2 bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition-colors"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M9 2a1 1 0 011 1v1h4a1 1 0 011 1v1H5V5a1 1 0 011-1h4V3a1 1 0 011-1zM4 7h12v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7zm3 3a1 1 0 012 0v5a1 1 0 01-2 0v-5zm4 0a1 1 0 012 0v5a1 1 0 01-2 0v-5z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                Perubahan Kepemilikan
+              </button>
+            </div>
             <div className="flex flex-col gap-4">
               {penghuniList.length > 0 ? (
                 <ul className="space-y-4">
