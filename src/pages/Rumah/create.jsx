@@ -10,11 +10,13 @@ const RumahCreate = () => {
   const [penghuniBaru, setPenghuniBaru] = useState("");
   const [statusRumah, setStatusRumah] = useState("");
   const [statusPenghuni, setStatusPenghuni] = useState("");
+  const [tanggalMulaiHuni, setTanggalMulaiHuni] = useState("");
+  const [tanggalAkhirHuni, setTanggalAkhirHuni] = useState("");
   const [alamat, setAlamat] = useState("");
   const [nomorTelepon, setNomorTelepon] = useState("");
   const [statusMenikah, setStatusMenikah] = useState("");
   const [fotoKTP, setFotoKTP] = useState(null);
-
+  
   const handleTambahPenghuni = () => {
     if (penghuniBaru.trim() !== "") {
       const penghuni = {
@@ -36,7 +38,7 @@ const RumahCreate = () => {
       setModalOpen(false);
     }
   };
-  
+
   const handleDeletePenghuni = (index) => {
     const newPenghuniList = penghuniList.filter((_, i) => i !== index);
     setPenghuniList(newPenghuniList);
@@ -51,8 +53,14 @@ const RumahCreate = () => {
     formData.append("status_rumah", statusRumah);
 
     if (statusRumah === "Dihuni") {
+      formData.append("tanggal_mulai_huni", tanggalMulaiHuni);
+      formData.append("tanggal_akhir_huni", tanggalAkhirHuni);
+
       penghuniList.forEach((penghuni, index) => {
-        formData.append(`penghuni[${index}][nama_lengkap]`, penghuni.nama_lengkap);
+        formData.append(
+          `penghuni[${index}][nama_lengkap]`,
+          penghuni.nama_lengkap
+        );
         formData.append(
           `penghuni[${index}][status_penghuni]`,
           penghuni.status_penghuni
@@ -82,7 +90,7 @@ const RumahCreate = () => {
           },
         }
       );
-      navigate('/rumah')
+      navigate("/rumah");
     } catch (error) {
       console.error("Ada kesalahan saat mengirim data:", error);
     }
@@ -129,9 +137,47 @@ const RumahCreate = () => {
 
         {statusRumah === "Dihuni" && (
           <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-900 mb-2">
-              Daftar Penghuni
-            </label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tanggal Mulai Huni
+                </label>
+                <TextInput
+                  type="date"
+                  onChange={(e) => setTanggalMulaiHuni(e.target.value)}
+                  required
+                  className="border border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tanggal Akhir Huni
+                </label>
+                <TextInput
+                  type="date"
+                  onChange={(e) => setTanggalAkhirHuni(e.target.value)}
+                  required
+                  className="border border-gray-300 rounded-md"
+                />
+              </div>
+            </div>
+            <div className="flex items-center justify-between mb-4 bg-gray-100 p-4 rounded-lg shadow-sm">
+              <label className="text-lg font-semibold text-gray-800 flex items-center">
+                <svg
+                  className="w-5 h-5 text-blue-500 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3-9H7a1 1 0 100 2h6a1 1 0 100-2z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                Daftar Penghuni
+              </label>
+            </div>
             <div className="flex flex-col gap-4">
               {penghuniList.length > 0 ? (
                 <ul className="space-y-4">
