@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, TextInput, FileInput, Modal, Select } from "flowbite-react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const RumahCreate = () => {
+const RumahEdit = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [isModalOpen, setModalOpen] = useState(false);
   const [penghuniList, setPenghuniList] = useState([]);
   const [penghuniBaru, setPenghuniBaru] = useState("");
@@ -14,6 +15,25 @@ const RumahCreate = () => {
   const [nomorTelepon, setNomorTelepon] = useState("");
   const [statusMenikah, setStatusMenikah] = useState("");
   const [fotoKTP, setFotoKTP] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/rumah/${id}/edit`
+        );
+        const data = response.data.data;
+
+        setAlamat(data.alamat);
+        setStatusRumah(data.status_rumah);
+        setPenghuniList(data.penghuni);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleTambahPenghuni = () => {
     if (penghuniBaru.trim() !== "") {
@@ -36,7 +56,7 @@ const RumahCreate = () => {
       setModalOpen(false);
     }
   };
-  
+
   const handleDeletePenghuni = (index) => {
     const newPenghuniList = penghuniList.filter((_, i) => i !== index);
     setPenghuniList(newPenghuniList);
@@ -46,24 +66,27 @@ const RumahCreate = () => {
     event.preventDefault();
 
     let formData = new FormData();
-
-    formData.append("alamat", alamat);
-    formData.append("status_rumah", statusRumah);
-
+    
+    formData.append("alamat", alamat || "");
+    formData.append("status_rumah", statusRumah || "");
     if (statusRumah === "Dihuni") {
       penghuniList.forEach((penghuni, index) => {
-        formData.append(`penghuni[${index}][nama_lengkap]`, penghuni.nama_lengkap);
+        formData.append(`penghuni[${index}][id]`, penghuni.id || "");
+        formData.append(
+          `penghuni[${index}][nama_lengkap]`,
+          penghuni.nama_lengkap || ""
+        );
         formData.append(
           `penghuni[${index}][status_penghuni]`,
-          penghuni.status_penghuni
+          penghuni.status_penghuni || ""
         );
         formData.append(
           `penghuni[${index}][nomor_telepon]`,
-          penghuni.nomor_telepon
+          penghuni.nomor_telepon || ""
         );
         formData.append(
           `penghuni[${index}][status_menikah]`,
-          penghuni.status_menikah
+          penghuni.status_menikah || ""
         );
 
         if (penghuni.foto_ktp) {
@@ -74,7 +97,7 @@ const RumahCreate = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/rumah",
+        `http://localhost:8000/api/rumah/${id}`,
         formData,
         {
           headers: {
@@ -82,7 +105,7 @@ const RumahCreate = () => {
           },
         }
       );
-      navigate('/rumah')
+      navigate("/rumah");
     } catch (error) {
       console.error("Ada kesalahan saat mengirim data:", error);
     }
@@ -90,9 +113,9 @@ const RumahCreate = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
-      <h1 className="text-2xl font-bold mb-4 text-gray-800">Tambah Rumah</h1>
+      <h1 className="text-2xl font-bold mb-4 text-gray-800">Edit Rumah</h1>
       <p className="text-gray-600 mb-6">
-        Silakan isi informasi berikut untuk menambahkan rumah baru.
+        Silakan isi informasi berikut untuk memperbarui data rumah.
       </p>
       <form>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -102,9 +125,9 @@ const RumahCreate = () => {
             </label>
             <TextInput
               type="text"
+              defaultValue={alamat}
               onChange={(e) => setAlamat(e.target.value)}
               placeholder="Masukkan alamat rumah"
-              required
               className="border border-gray-300 rounded-md"
             />
           </div>
@@ -113,7 +136,6 @@ const RumahCreate = () => {
               Status Rumah
             </label>
             <Select
-              required
               value={statusRumah}
               onChange={(e) => setStatusRumah(e.target.value)}
               className="border border-gray-300 rounded-md"
@@ -143,7 +165,7 @@ const RumahCreate = () => {
                       <div className="flex justify-between items-start">
                         <div>
                           <p className="text-lg font-semibold text-gray-800">
-                            Nama Lengkap : {penghuni.nama_lengkap}
+                            {penghuni.nama_lengkap}
                           </p>
                           <p className="text-gray-600">
                             Status Penghuni : {penghuni.status_penghuni}
@@ -184,7 +206,7 @@ const RumahCreate = () => {
 
         <div className="flex justify-end">
           <Button onClick={handleSubmit} color="cyan" type="submit">
-            Tambah Rumah
+            Simpan
           </Button>
         </div>
       </form>
@@ -220,7 +242,6 @@ const RumahCreate = () => {
               Status Penghuni
             </label>
             <Select
-              required
               className="border border-gray-300 rounded-md"
               value={statusPenghuni}
               onChange={(e) => setStatusPenghuni(e.target.value)}
@@ -249,7 +270,6 @@ const RumahCreate = () => {
               Status Menikah
             </label>
             <Select
-              required
               className="border border-gray-300 rounded-md"
               value={statusMenikah}
               onChange={(e) => setStatusMenikah(e.target.value)}
@@ -275,4 +295,4 @@ const RumahCreate = () => {
   );
 };
 
-export default RumahCreate;
+export default RumahEdit;
