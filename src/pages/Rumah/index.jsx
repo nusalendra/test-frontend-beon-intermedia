@@ -62,6 +62,12 @@ const Rumah = () => {
                 <Table.Cell>{item.status_rumah}</Table.Cell>
                 <Table.Cell>
                   <Link
+                    to={`/rumah/${item.id}`}
+                    className="font-medium text-green-600 hover:underline me-3"
+                  >
+                    Detail
+                  </Link>
+                  <Link
                     to={`/rumah/${item.id}/edit`}
                     className="font-medium text-cyan-600 hover:underline"
                   >
