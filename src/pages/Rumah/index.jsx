@@ -69,9 +69,15 @@ const Rumah = () => {
                   </Link>
                   <Link
                     to={`/rumah/${item.id}/edit`}
-                    className="font-medium text-cyan-600 hover:underline"
+                    className="font-medium text-cyan-600 hover:underline me-3"
                   >
                     Edit
+                  </Link>
+                  <Link
+                    to={`/rumah/${item.id}/catatan-historical`}
+                    className="font-medium text-stone-600 hover:underline me-3"
+                  >
+                    Catatan Historical
                   </Link>
                 </Table.Cell>
               </Table.Row>
