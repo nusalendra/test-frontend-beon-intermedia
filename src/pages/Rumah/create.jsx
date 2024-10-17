@@ -10,11 +10,13 @@ const RumahCreate = () => {
   const [penghuniBaru, setPenghuniBaru] = useState("");
   const [statusRumah, setStatusRumah] = useState("");
   const [statusPenghuni, setStatusPenghuni] = useState("");
+  const [tanggalMulaiHuni, setTanggalMulaiHuni] = useState("");
+  const [tanggalAkhirHuni, setTanggalAkhirHuni] = useState("");
   const [alamat, setAlamat] = useState("");
   const [nomorTelepon, setNomorTelepon] = useState("");
   const [statusMenikah, setStatusMenikah] = useState("");
   const [fotoKTP, setFotoKTP] = useState(null);
-
+  
   const handleTambahPenghuni = () => {
     if (penghuniBaru.trim() !== "") {
       const penghuni = {
@@ -36,7 +38,7 @@ const RumahCreate = () => {
       setModalOpen(false);
     }
   };
-  
+
   const handleDeletePenghuni = (index) => {
     const newPenghuniList = penghuniList.filter((_, i) => i !== index);
     setPenghuniList(newPenghuniList);
@@ -51,8 +53,14 @@ const RumahCreate = () => {
     formData.append("status_rumah", statusRumah);
 
     if (statusRumah === "Dihuni") {
+      formData.append("tanggal_mulai_huni", tanggalMulaiHuni);
+      formData.append("tanggal_akhir_huni", tanggalAkhirHuni);
+
       penghuniList.forEach((penghuni, index) => {
-        formData.append(`penghuni[${index}][nama_lengkap]`, penghuni.nama_lengkap);
+        formData.append(
+          `penghuni[${index}][nama_lengkap]`,
+          penghuni.nama_lengkap
+        );
         formData.append(
           `penghuni[${index}][status_penghuni]`,
           penghuni.status_penghuni
@@ -82,7 +90,7 @@ const RumahCreate = () => {
           },
         }
       );
-      navigate('/rumah')
+      navigate("/rumah");
     } catch (error) {
       console.error("Ada kesalahan saat mengirim data:", error);
     }
@@ -129,6 +137,30 @@ const RumahCreate = () => {
 
         {statusRumah === "Dihuni" && (
           <div className="mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tanggal Mulai Huni
+                </label>
+                <TextInput
+                  type="date"
+                  onChange={(e) => setTanggalMulaiHuni(e.target.value)}
+                  required
+                  className="border border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tanggal Akhir Huni
+                </label>
+                <TextInput
+                  type="date"
+                  onChange={(e) => setTanggalAkhirHuni(e.target.value)}
+                  required
+                  className="border border-gray-300 rounded-md"
+                />
+              </div>
+            </div>
             <label className="block text-sm font-semibold text-gray-900 mb-2">
               Daftar Penghuni
             </label>
