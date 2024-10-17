@@ -11,6 +11,8 @@ const RumahEdit = () => {
   const [penghuniBaru, setPenghuniBaru] = useState("");
   const [statusRumah, setStatusRumah] = useState("");
   const [statusPenghuni, setStatusPenghuni] = useState("");
+  const [tanggalMulaiHuni, setTanggalMulaiHuni] = useState("");
+  const [tanggalAkhirHuni, setTanggalAkhirHuni] = useState("");
   const [alamat, setAlamat] = useState("");
   const [nomorTelepon, setNomorTelepon] = useState("");
   const [statusMenikah, setStatusMenikah] = useState("");
@@ -26,6 +28,8 @@ const RumahEdit = () => {
 
         setAlamat(data.alamat);
         setStatusRumah(data.status_rumah);
+        setTanggalMulaiHuni(data.history_rumah[0].tanggal_mulai_huni);
+        setTanggalAkhirHuni(data.history_rumah[0]. tanggal_akhir_huni);
         setPenghuniList(data.penghuni);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -70,6 +74,9 @@ const RumahEdit = () => {
     formData.append("alamat", alamat || "");
     formData.append("status_rumah", statusRumah || "");
     if (statusRumah === "Dihuni") {
+      formData.append("tanggal_mulai_huni", tanggalMulaiHuni);
+      formData.append("tanggal_akhir_huni", tanggalAkhirHuni);
+
       penghuniList.forEach((penghuni, index) => {
         formData.append(`penghuni[${index}][id]`, penghuni.id || "");
         formData.append(
@@ -151,6 +158,32 @@ const RumahEdit = () => {
 
         {statusRumah === "Dihuni" && (
           <div className="mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tanggal Mulai Huni
+                </label>
+                <TextInput
+                  type="date"
+                  value={tanggalMulaiHuni}
+                  onChange={(e) => setTanggalMulaiHuni(e.target.value)}
+                  required
+                  className="border border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tanggal Akhir Huni
+                </label>
+                <TextInput
+                  type="date"
+                  value={tanggalAkhirHuni}
+                  onChange={(e) => setTanggalAkhirHuni(e.target.value)}
+                  required
+                  className="border border-gray-300 rounded-md"
+                />
+              </div>
+            </div>
             <label className="block text-sm font-semibold text-gray-900 mb-2">
               Daftar Penghuni
             </label>
