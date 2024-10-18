@@ -14,7 +14,7 @@ const CekTagihanIuran = () => {
   const [selectedNamaIuran, setSelectedNamaIuran] = useState("");
   const [bulanTagihan, setBulanTagihan] = useState([]);
   const [tanggalPembayaran, setTanggalPembayaran] = useState("");
-  console.log(bulanTagihan)
+  
   useEffect(() => {
     const fetchData = async (path, setDataCallback) => {
       try {
@@ -149,6 +149,7 @@ const CekTagihanIuran = () => {
                 </th>
                 <th className="p-3 text-left font-semibold">Bulan Tagihan</th>
                 <th className="p-3 text-left font-semibold">Total Tagihan</th>
+                <th className="p-3 text-left font-semibold">Status Tagihan</th>
                 <th className="p-3 text-left font-semibold">Aksi</th>
               </tr>
             </thead>
@@ -168,6 +169,7 @@ const CekTagihanIuran = () => {
                   <td className="p-3 text-gray-800">
                     Rp. {iuran.total_tagihan.toLocaleString("id-ID")}
                   </td>
+                  <td className="p-3 text-gray-800">{iuran.status_pembayaran}</td>
                   <td className="p-3 text-gray-800">
                     <Button
                       color="blue"

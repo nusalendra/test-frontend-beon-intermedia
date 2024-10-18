@@ -24,8 +24,6 @@ export function SidebarComponent() {
           <Sidebar.Item
             href="/rumah"
             icon={HiHome}
-            label="Pro"
-            labelColor="dark"
             className={isActive("/rumah") ? "bg-blue-500 text-white" : ""}
           >
             Rumah
