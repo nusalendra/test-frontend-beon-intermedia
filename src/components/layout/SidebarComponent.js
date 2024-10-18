@@ -31,14 +31,6 @@ export function SidebarComponent() {
             Rumah
           </Sidebar.Item>
           <Sidebar.Item
-            href="/penghuni"
-            icon={HiUserGroup}
-            label="3"
-            className={isActive("/penghuni") ? "bg-blue-500 text-white" : ""}
-          >
-            Penghuni
-          </Sidebar.Item>
-          <Sidebar.Item
             href="/pembayaran"
             icon={HiCash}
             className={isActive("/pembayaran") ? "bg-blue-500 text-white" : ""}
