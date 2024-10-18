@@ -6,11 +6,12 @@ import axios from "axios";
 const Rumah = () => {
   const [rumahList, setRumahList] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:8000/api/rumah");
+        console.log(response.data.data)
         setRumahList(response.data.data);
         setLoading(false);
       } catch (error) {
@@ -48,6 +49,7 @@ const Rumah = () => {
             <Table.HeadCell>No</Table.HeadCell>
             <Table.HeadCell>Alamat</Table.HeadCell>
             <Table.HeadCell>Status Rumah</Table.HeadCell>
+            <Table.HeadCell>Total Tagihan Belum Bayar</Table.HeadCell>
             <Table.HeadCell>
               <span className="sr-only">Edit</span>
             </Table.HeadCell>
@@ -60,6 +62,7 @@ const Rumah = () => {
                 </Table.Cell>
                 <Table.Cell>{item.alamat}</Table.Cell>
                 <Table.Cell>{item.status_rumah}</Table.Cell>
+                <Table.Cell className="text-red-500">Rp. {item.total_belum_bayar}</Table.Cell>
                 <Table.Cell>
                   <Link
                     to={`/rumah/${item.id}`}
@@ -72,6 +75,12 @@ const Rumah = () => {
                     className="font-medium text-cyan-600 hover:underline me-3"
                   >
                     Edit
+                  </Link>
+                  <Link
+                    to={`/rumah/${item.id}/cek-tagihan`}
+                    className="font-medium text-red-600 hover:underline me-3"
+                  >
+                    Cek Tagihan
                   </Link>
                   <Link
                     to={`/rumah/${item.id}/catatan-historical`}

@@ -1,88 +1,95 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { Table, Button } from "flowbite-react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
-const Pembayaran = () => {
+const Rumah = () => {
+  const [pembayaranIuranList, setPembayaranIuranList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/pembayaran-iuran"
+        );
+        console.log(response.data.data);
+        setPembayaranIuranList(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  
+  const bulanMapping = {
+    "01": "Januari",
+    "02": "Februari",
+    "03": "Maret",
+    "04": "April",
+    "05": "Mei",
+    "06": "Juni",
+    "07": "Juli",
+    "08": "Agustus",
+    "09": "September",
+    10: "Oktober",
+    11: "November",
+    12: "Desember",
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      {/* Judul Halaman */}
       <div className="mb-4">
-        <h1 className="text-3xl font-bold text-gray-800">Daftar Pembayaran</h1>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Daftar Pembayaran Iuran
+        </h1>
         <p className="text-gray-600">
-          Berikut adalah daftar pembayaran beserta detailnya.
+          Berikut adalah daftar pembayaran iuran beserta detailnya.
         </p>
       </div>
 
-      {/* Tombol Aksi */}
       <div className="mb-4 flex justify-end">
-        <Button color="cyan" href="#" className="mr-2">
-          Tambah Produk
-        </Button>
-        <Button color="light" href="#">
-          Kelola Produk
-        </Button>
+        <Link to="/pembayaran/create">
+          <Button color="cyan" className="mr-2">
+            Tambah Pembayaran
+          </Button>
+        </Link>
       </div>
-      {/*  */}
-      {/* Tabel */}
       <div className="overflow-x-auto shadow-lg rounded-lg">
         <Table hoverable={true} className="min-w-full text-left">
           <Table.Head className="bg-gray-200 text-gray-800">
-            <Table.HeadCell>Product name</Table.HeadCell>
-            <Table.HeadCell>Color</Table.HeadCell>
-            <Table.HeadCell>Category</Table.HeadCell>
-            <Table.HeadCell>Price</Table.HeadCell>
-            <Table.HeadCell>
-              <span className="sr-only">Edit</span>
-            </Table.HeadCell>
+            <Table.HeadCell>No</Table.HeadCell>
+            <Table.HeadCell>Nama Iuran</Table.HeadCell>
+            <Table.HeadCell>Biaya Iuran</Table.HeadCell>
+            <Table.HeadCell>Tagihan</Table.HeadCell>
+            <Table.HeadCell>Total Biaya Penghuni Belum Bayar</Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y bg-white">
-            <Table.Row className="hover:bg-gray-100">
-              <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
-                {'Apple MacBook Pro 17"'}
-              </Table.Cell>
-              <Table.Cell>Sliver</Table.Cell>
-              <Table.Cell>Laptop</Table.Cell>
-              <Table.Cell>$2999</Table.Cell>
-              <Table.Cell>
-                <a
-                  href="#"
-                  className="font-medium text-cyan-600 hover:underline"
-                >
-                  Edit
-                </a>
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row className="hover:bg-gray-100">
-              <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
-                Microsoft Surface Pro
-              </Table.Cell>
-              <Table.Cell>White</Table.Cell>
-              <Table.Cell>Laptop PC</Table.Cell>
-              <Table.Cell>$1999</Table.Cell>
-              <Table.Cell>
-                <a
-                  href="#"
-                  className="font-medium text-cyan-600 hover:underline"
-                >
-                  Edit
-                </a>
-              </Table.Cell>
-            </Table.Row>
-            <Table.Row className="hover:bg-gray-100">
-              <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
-                Magic Mouse 2
-              </Table.Cell>
-              <Table.Cell>Black</Table.Cell>
-              <Table.Cell>Accessories</Table.Cell>
-              <Table.Cell>$99</Table.Cell>
-              <Table.Cell>
-                <a
-                  href="#"
-                  className="font-medium text-cyan-600 hover:underline"
-                >
-                  Edit
-                </a>
-              </Table.Cell>
-            </Table.Row>
+            {pembayaranIuranList.map((item, index) => {
+              const bulan = item.tanggal_tagihan.split("-")[1];
+              const tahun = item.tanggal_tagihan.split("-")[0];
+              return (
+                <Table.Row key={item.id} className="hover:bg-gray-100">
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
+                    {index + 1}
+                  </Table.Cell>
+                  <Table.Cell>{item.nama}</Table.Cell>
+                  <Table.Cell>Rp. {item.biaya}</Table.Cell>
+                  <Table.Cell>{bulanMapping[bulan]} {tahun}</Table.Cell>{" "}
+                  <Table.Cell>
+                    Rp. {item.total_pembayaran_belum_bayar}
+                  </Table.Cell>
+                </Table.Row>
+              );
+            })}
           </Table.Body>
         </Table>
       </div>
@@ -90,4 +97,4 @@ const Pembayaran = () => {
   );
 };
 
-export default Pembayaran;
+export default Rumah;
