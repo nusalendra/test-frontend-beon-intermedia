@@ -26,37 +26,6 @@ const CatatanHistorical = () => {
     fetchData();
   }, []);
 
-  // const historicalData = [
-  //   {
-  //     nama_lengkap: "Budi Santoso",
-  //     status_penghuni: "Tetap",
-  //     nomor_telepon: "081234567890",
-  //     status_menikah: "Sudah Menikah",
-  //     tanggal_mulai_huni: "2022-01-15",
-  //     tanggal_akhir_huni: "2023-06-30",
-  //     foto_ktp: "https://via.placeholder.com/150",
-  //   },
-  //   {
-  //     nama_lengkap: "Budi Santoso",
-  //     status_penghuni: "Tetap",
-  //     nomor_telepon: "081234567890",
-  //     status_menikah: "Sudah Menikah",
-  //     tanggal_mulai_huni: "2022-01-15",
-  //     tanggal_akhir_huni: "2023-06-30",
-  //     foto_ktp: "https://via.placeholder.com/150",
-  //   },
-  //   {
-  //     nama_lengkap: "Budi Santoso",
-  //     status_penghuni: "Tetap",
-  //     nomor_telepon: "081234567890",
-  //     status_menikah: "Sudah Menikah",
-  //     tanggal_mulai_huni: "2022-01-15",
-  //     tanggal_akhir_huni: "2023-06-30",
-  //     foto_ktp: "https://via.placeholder.com/150",
-  //   },
-  // ];
-
-  // Fungsi untuk memformat tanggal
   const formatDate = (dateString) => {
     const options = { day: "2-digit", month: "2-digit", year: "numeric" };
     return new Date(dateString).toLocaleDateString("id-ID", options);
